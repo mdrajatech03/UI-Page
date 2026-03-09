@@ -28,8 +28,9 @@ A lightweight, responsive, and user-friendly authentication interface. This proj
 
 ## 📸 Preview
 
-![Project Preview](login.jpg)
-*(Replace this with a screenshot of your actual page for a better impact!)*
+![Project Preview](img1.jpg)
+![Project Preview](img2.jpg)
+![Project Preview](img3.jpg)
 
 ## 👨‍💻 Author
 
