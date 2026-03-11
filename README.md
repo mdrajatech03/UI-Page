@@ -1,10 +1,11 @@
-# 🔐 Modern Login & Registration Page
+# 🔐 User-InterFace
 
 A lightweight, responsive, and user-friendly authentication interface. This project focuses on clean UI design and smooth interactivity, making it a perfect starting point for any web application's user gateway.
 
 ## 🌐 Live Demo
 
-[🚀 Click Here to Use Login and Register Page](https://mdrajatech03.github.io/Login-and-Register-Page/)
+**[🚀 Click Here](https://mdrajatech03.github.io/Login-and-Register-Page/)**
+
 ## 🚀 Key Features
 
 * **Responsive Layout:** Fully optimized for tablet and desktop screens using CSS Flexbox/Grid.
