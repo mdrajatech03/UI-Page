@@ -4,7 +4,7 @@ A lightweight, responsive, and user-friendly authentication interface. This proj
 
 ## 🌐 Live Demo
 
-**[🚀 Click Here](https://mdrajatech03.github.io/Login-and-Register-Page/)**
+**[🚀 Click Here](https://mdrajatech03.github.io/User-InterFace/)**
 
 ## 🚀 Key Features
 
