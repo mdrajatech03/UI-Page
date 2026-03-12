@@ -325,4 +325,93 @@ header {
     to {
       text-shadow:0 0 30px black ;
     }
+
+}
+
+
+
+
+/* ================= RESPONSIVE DESIGN ================= */
+
+@media (max-width: 992px){
+
+header{
+    padding:20px 40px;
+}
+
+.navigation a{
+    margin-left:20px;
+}
+
+.wrapper{
+    width:90%;
+}
+
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width:768px){
+
+header{
+    padding:15px 20px;
+}
+
+.logo{
+    font-size:1.5em;
+}
+
+.navigation a{
+    font-size:0.9em;
+    margin-left:15px;
+}
+
+.navigation .btnLogin-popup{
+    width:100px;
+    height:40px;
+    font-size:0.9em;
+}
+
+.wrapper{
+    width:90%;
+    height:auto;
+}
+
+.wrapper .form-box{
+    padding:30px;
+}
+
+}
+
+/* ================= SMALL MOBILE ================= */
+
+@media (max-width:480px){
+
+header{
+    flex-direction:column;
+    gap:10px;
+}
+
+.navigation{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.navigation a{
+    margin:8px;
+}
+
+.wrapper{
+    width:95%;
+}
+
+.form-box h2{
+    font-size:1.5em;
+}
+
+.input-box{
+    height:45px;
+}
+
 }
