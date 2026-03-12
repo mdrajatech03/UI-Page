@@ -1,57 +1,267 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #050a0f; overflow-x: hidden; }
-#particleCanvas { position: absolute; top: 0; left: 0; z-index: -1; }
-
-/* Desktop Header */
-header {
-    position: fixed; top: 0; width: 100%; padding: 20px 10%;
-    display: flex; justify-content: space-between; align-items: center;
-    z-index: 100; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+/* --- Global Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Padding layout ko kharab nahi karegi */
+    font-family: 'Poppins', sans-serif;
 }
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #050a0f;
+    overflow-x: hidden; /* Horizontal scroll rokne ke liye */
+}
+
+#particleCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* --- Header & Navigation --- */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+}
+
 .logo { font-size: 1.8em; color: #fff; text-decoration: none; font-weight: 700; }
 .logo span { color: #00f2fe; }
-.navigation a { font-size: 1.1em; color: #fff; text-decoration: none; font-weight: 500; margin-left: 25px; }
-.btnLogin-popup { width: 100px; height: 40px; background: transparent; border: 2px solid #00f2fe; border-radius: 20px; color: #fff; cursor: pointer; margin-left: 25px; transition: .3s; }
 
-/* Form Wrapper */
+.navigation a {
+    font-size: 1.1em;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 20px;
+    transition: 0.3s;
+}
+
+.navigation a:hover { color: #00f2fe; }
+
+.btnLogin-popup {
+    width: 100px;
+    height: 40px;
+    background: transparent;
+    border: 2px solid #00f2fe;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 20px;
+    transition: 0.5s;
+}
+
+.btnLogin-popup:hover { background: #00f2fe; color: #050a0f; }
+
+/* --- Wrapper & Forms Logic --- */
 .wrapper {
-    position: relative; width: 400px; height: 500px;
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px; backdrop-filter: blur(20px);
-    overflow: hidden; display: flex; transform: scale(0); transition: .5s ease;
+    position: relative;
+    width: 400px; /* Desktop width */
+    height: 500px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    display: flex;
+    overflow: hidden;
+    transform: scale(0);
+    transition: transform 0.5s ease, height 0.3s ease;
 }
+
 .wrapper.active-popup { transform: scale(1); }
-.wrapper.active { height: 620px; }
+.wrapper.active { height: 600px; }
 
-.form-container { display: flex; width: 800px; transition: .5s ease; }
-.wrapper.active .form-container { transform: translateX(-400px); }
-.form-box { width: 400px; padding: 40px; display: flex; flex-direction: column; }
-.form-box h2 { font-size: 1.8em; color: #fff; text-align: center; margin-bottom: 20px; }
-
-/* Input Styles */
-.input-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
-.input-group label { color: #fff; font-size: 0.9em; }
-.field { position: relative; width: 100%; }
-.field input { width: 100%; height: 45px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0 40px 0 15px; color: #fff; outline: none; }
-.field i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #fff; cursor: pointer; opacity: 0.7; }
-
-.btn { width: 100%; height: 45px; background: #00f2fe; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; margin-top: 10px; }
-.window-controls { position: absolute; top: 0; right: 0; display: flex; z-index: 10; }
-.window-controls span { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; }
-.icon-close { background: #00f2fe; color: #000 !important; border-bottom-left-radius: 15px; }
-
-/* MOBILE RESPONSIVE CODE (MAIN FIX) */
-@media (max-width: 768px) {
-    header { padding: 15px 5%; flex-direction: column; height: auto; }
-    .navigation { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-    .navigation a { margin-left: 0; font-size: 0.9em; }
-    .btnLogin-popup { margin-left: 0; width: 80px; height: 35px; font-size: 0.8em; }
-
-    .wrapper { width: 90%; height: auto; min-height: 480px; }
-    .form-container { width: 200%; } /* Mobile par widths adjust */
-    .form-box { width: 50%; padding: 25px; }
-    .wrapper.active .form-container { transform: translateX(-50%); }
-    .form-box h2 { font-size: 1.5em; }
+/* Desktop Sliding Logic */
+.form-container {
+    display: flex;
+    width: 800px; /* 400px * 2 forms */
+    transition: transform 0.5s ease;
 }
 
+.wrapper.active .form-container {
+    transform: translateX(-400px);
+}
+
+.form-box {
+    width: 400px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-box h2 {
+    font-size: 2em;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* --- Input Groups & Icons --- */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: #fff;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.field {
+    position: relative;
+    width: 100%;
+}
+
+.field input {
+    width: 100%;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0 45px 0 15px;
+    color: #fff;
+    outline: none;
+    transition: 0.3s;
+}
+
+.field input:focus { border-color: #00f2fe; }
+
+.field i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.btn {
+    width: 100%;
+    height: 45px;
+    background: #00f2fe;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+/* --- Window Controls --- */
+.window-controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    z-index: 10;
+}
+
+.window-controls span {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #fff;
+}
+
+.icon-close {
+    background: #00f2fe;
+    color: #000 !important;
+    border-bottom-left-radius: 15px;
+}
+
+.login-register {
+    text-align: center;
+    color: #fff;
+    font-size: 0.9em;
+    margin-top: 20px;
+}
+
+.login-register a { color: #00f2fe; text-decoration: none; font-weight: 600; }
+
+/* ======================================================
+   MOBILE MODE FIX (Main Responsive Code)
+   ====================================================== */
+
+@media (max-width: 768px) {
+    header {
+        padding: 15px 5%;
+        flex-direction: column; /* Logo aur Menu upar-niche */
+    }
+
+    .navigation {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .navigation a {
+        margin-left: 0;
+        font-size: 0.9em;
+    }
+
+    .btnLogin-popup {
+        margin-left: 0;
+        width: 80px;
+        height: 35px;
+        font-size: 0.8em;
+    }
+
+    /* Wrapper Mobile Settings */
+    .wrapper {
+        width: 90%; /* Fixed width 400px ki jagah screen ka 90% */
+        height: 520px;
+    }
+
+    .wrapper.active {
+        height: 600px;
+    }
+
+    /* Sliding adjustment for mobile */
+    .form-container {
+        width: 200%; /* Do forms ke liye */
+    }
+
+    .form-box {
+        width: 50%; /* Har form container ki width ka aadha */
+        padding: 25px;
+    }
+
+    .wrapper.active .form-container {
+        transform: translateX(-50%); /* 400px fixed ki jagah partial move */
+    }
+
+    .form-box h2 {
+        font-size: 1.6em;
+    }
+
+    .field input {
+        height: 40px;
+        font-size: 0.9em;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .navigation a { font-size: 0.8em; }
+    .form-box { padding: 20px; }
+}
 
