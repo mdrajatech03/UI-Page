@@ -73,17 +73,34 @@ registerForm.addEventListener('submit', async (e) => {
     }
 });
 
-// 7. Login Logic
+// 7. Login Logic (Improved Error Messages)
 const loginForm = document.querySelector('.form-box.login form');
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = loginForm.querySelector('input[type="email"]').value;
-    const password = document.getElementById('logPass').value;
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = loginForm.querySelector('input[type="email"]').value;
+        const password = document.getElementById('logPass').value;
 
-    signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            alert("Login Successful!");
-            window.location.href = "index.html"; 
-        })
-        .catch((error) => alert("Login Failed: " + error.message));
-});
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                alert("Login Successful! Raja Tech mein aapka swagat hai.");
+                window.location.href = "index.html"; 
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                
+                // Custom Messages based on Error Code
+                if (errorCode === 'auth/invalid-credential') {
+                    alert("⚠️ Galat Email ya Password! Kirpya sahi details bharein.");
+                } else if (errorCode === 'auth/user-not-found') {
+                    alert("⚠️ Is Email se koi account nahi mila. Pehle Register karein.");
+                } else if (errorCode === 'auth/wrong-password') {
+                    alert("⚠️ Password galat hai! Dubara koshish karein.");
+                } else if (errorCode === 'auth/invalid-email') {
+                    alert("⚠️ Email format galat hai (e.g. name@gmail.com).");
+                } else {
+                    alert("⚠️ Kuch gadbad hui: " + error.message);
+                }
+            });
+    });
+}
