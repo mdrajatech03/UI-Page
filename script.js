@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// 1. Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCMwFJfbkdFjxWzNhMccXs9FbhqntSKdRM",
   authDomain: "portfolio-auth-19a5e.firebaseapp.com",
@@ -16,19 +17,19 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Toast Function
+// 2. Toast Notification Function
 const showToast = (icon, title) => {
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 2000,
         timerProgressBar: true,
     });
     Toast.fire({ icon, title });
 };
 
-// UI Elements
+// 3. UI Selectors
 const wrapper = document.querySelector('.wrapper');
 const loginLink = document.querySelector('.register-link');
 const registerLink = document.querySelector('.login-link');
@@ -40,7 +41,7 @@ if (iconClose) iconClose.onclick = () => wrapper.classList.remove('active-popup'
 if (loginLink) loginLink.onclick = () => wrapper.classList.add('active');
 if (registerLink) registerLink.onclick = () => wrapper.classList.remove('active');
 
-// --- Registration ---
+// 4. Registration Logic
 const registerForm = document.querySelector('.form-box.register form');
 if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
@@ -53,13 +54,15 @@ if (registerForm) {
             await setDoc(doc(db, "users", userCredential.user.uid), {
                 username, email, createdAt: new Date()
             });
-            showToast('success', 'Account Created!');
+            showToast('success', 'Registration Successful!');
             wrapper.classList.remove('active');
-        } catch (error) { showToast('error', error.message); }
+        } catch (error) { 
+            showToast('error', error.message); 
+        }
     });
 }
 
-// --- Login (Redirects to portfolio.html) ---
+// 5. Login Logic (Redirects to portfolio.html)
 const loginForm = document.querySelector('.form-box.login form');
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
@@ -68,8 +71,11 @@ if (loginForm) {
         const password = document.getElementById('logPass').value;
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-                showToast('success', 'Login Successful!');
-                setTimeout(() => { window.location.href = "portfolio.html"; }, 1500);
+                showToast('success', 'Login Ho Gaya!');
+                setTimeout(() => { 
+                    // GitHub Pages par file path fix
+                    window.location.href = "portfolio.html"; 
+                }, 1500);
             })
             .catch((error) => {
                 if (error.code === 'auth/invalid-credential') showToast('error', 'Galat Email ya Password!');
@@ -78,28 +84,25 @@ if (loginForm) {
     });
 }
 
-// --- Logout Logic Fix ---
+// 6. Logout Logic (Fixes 404 Error)
 const btnLogout = document.getElementById('btnLogout');
 if (btnLogout) {
     btnLogout.onclick = () => {
         signOut(auth).then(() => {
-            showToast('info', 'Logged Out!');
-            setTimeout(() => {
-                // Agar aapka login page 'index.html' hai, toh yahan wahi likhein
-                // GitHub Pages par case-sensitive hota hai, isliye dhyan dein
+            showToast('info', 'Logging out...');
+            setTimeout(() => { 
+                // Logout ke baad wapas login form (index.html) par bhejega
                 window.location.href = "index.html"; 
-            }, 1500);
-        }).catch((error) => {
-            console.error("Logout Error:", error);
+            }, 1000);
         });
     };
 }
 
-
-// --- Security Check (Route Protection) ---
+// 7. Route Protection (Security)
 onAuthStateChanged(auth, (user) => {
     const path = window.location.pathname;
+    // Agar login nahi hai aur portfolio page par hai toh bahar nikal do
     if (!user && path.includes("portfolio.html")) {
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     }
 });
