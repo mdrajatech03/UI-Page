@@ -3,70 +3,91 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
 body {
-    display: flex; justify-content: center; align-items: center; min-height: 100vh;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); overflow: hidden;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; background: #0f172a; overflow: hidden;
 }
 
-header {
-    position: fixed; top: 0; left: 0; width: 100%; padding: 20px 10%;
-    display: flex; justify-content: space-between; align-items: center; z-index: 100;
-    background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
+/* --- FIXED HEADER (No Column on Mobile) --- */
+.main-header {
+    position: fixed; top: 0; left: 0; width: 100%; 
+    padding: 15px 5%; /* Reduced padding for mobile spacing */
+    display: flex; 
+    justify-content: space-between; /* Logo Left, Button Right */
+    align-items: center; 
+    background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); 
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: nowrap; /* Forces row layout always */
 }
 
-.logo { font-size: 1.8rem; color: #fff; letter-spacing: 1px; }
+.logo { font-size: 1.4rem; color: #fff; font-weight: 700; flex-shrink: 0; }
 .logo span { color: #00f2fe; }
 
-.navigation a { color: #fff; text-decoration: none; margin-left: 30px; font-weight: 500; transition: .3s; }
+/* Navigation Links (Center) */
+.navigation { display: flex; gap: 20px; align-items: center; }
+.navigation a { text-decoration: none; color: #fff; font-size: 0.9rem; font-weight: 500; transition: .3s; }
 .navigation a:hover { color: #00f2fe; }
 
+/* Right Side Button */
+.header-right { flex-shrink: 0; }
 .btnLogin-popup {
-    width: 120px; height: 45px; background: transparent; border: 2px solid #fff;
-    border-radius: 10px; color: #fff; font-weight: 600; cursor: pointer; margin-left: 40px; transition: .4s;
+    padding: 8px 20px; background: transparent; border: 2px solid #00f2fe;
+    border-radius: 8px; color: #00f2fe; font-weight: 600; cursor: pointer; transition: 0.4s;
+    font-size: 0.85rem;
 }
-.btnLogin-popup:hover { background: #fff; color: #0f172a; }
+.btnLogin-popup:hover { background: #00f2fe; color: #0f172a; }
 
-/* Wrapper - Popup Design */
+/* --- Wrapper - Centered & Responsive --- */
 .wrapper {
-    position: relative; width: 420px; height: 460px; background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 25px; backdrop-filter: blur(25px);
+    position: relative; width: 380px; height: 430px; background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 20px; backdrop-filter: blur(20px);
     display: flex; justify-content: center; align-items: center; transition: .5s ease;
-    transform: scale(0); box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    transform: scale(0); overflow: hidden; margin-top: 80px; /* Space for Navbar */
 }
 .wrapper.active-popup { transform: scale(1); }
-.wrapper.active { height: 540px; }
+.wrapper.active { height: 500px; }
 
-.form-box { width: 100%; padding: 45px; transition: .2s ease; }
-.form-box.register { position: absolute; transform: translateX(420px); }
-.wrapper.active .form-box.login { transform: translateX(-420px); opacity: 0; }
-.wrapper.active .form-box.register { transform: translateX(0); opacity: 1; }
+/* Overlap Fix */
+.form-box { width: 100%; padding: 35px; transition: transform .5s ease, opacity .5s ease; }
+.form-box.register { position: absolute; opacity: 0; pointer-events: none; transform: translateX(380px); }
+
+.wrapper.active .form-box.login { opacity: 0; pointer-events: none; transform: translateX(-380px); }
+.wrapper.active .form-box.register { opacity: 1; pointer-events: auto; transform: translateX(0); }
 
 .icon-close {
-    position: absolute; top: 0; right: 0; width: 45px; height: 45px; background: #00f2fe;
+    position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: #00f2fe;
     display: flex; justify-content: center; align-items: center; border-radius: 0 20px 0 20px;
-    font-size: 25px; color: #0f172a; cursor: pointer; z-index: 1;
+    cursor: pointer; color: #000; font-size: 20px; z-index: 10;
 }
 
-h2 { font-size: 2rem; color: #fff; text-align: center; margin-bottom: 20px; }
+h2 { font-size: 1.8rem; color: #fff; text-align: center; margin-bottom: 10px; }
 
-/* Input Fix - Text line ke beech nahi aayega */
-.input-box { position: relative; width: 100%; height: 55px; border-bottom: 2px solid #00f2fe; margin: 25px 0; }
-.input-box label { position: absolute; top: 50%; left: 5px; transform: translateY(-50%); color: #fff; pointer-events: none; transition: .4s; }
-.input-box input { width: 100%; height: 100%; background: transparent; border: none; outline: none; font-size: 1rem; color: #fff; padding: 0 35px 0 5px; }
+/* Input Styles */
+.input-box { position: relative; width: 100%; height: 50px; border-bottom: 2px solid #00f2fe; margin: 25px 0; }
+.input-box input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: #fff; padding-right: 30px; }
+.input-box label { position: absolute; top: 50%; left: 0; transform: translateY(-50%); color: #fff; transition: .4s; pointer-events: none; }
+.input-box input:focus~label, .input-box input:valid~label { top: -5px; color: #00f2fe; font-size: 0.8rem; }
+.icon { position: absolute; right: 5px; color: #fff; font-size: 1.1rem; top: 15px; }
 
-/* Label animation fix */
-.input-box input:focus~label, .input-box input:valid~label { top: -5px; color: #00f2fe; font-size: 0.85rem; }
-
-.icon { position: absolute; right: 8px; font-size: 1.2rem; color: #fff; line-height: 57px; }
-
-/* Professional Button CSS */
+/* Button Style */
 .btn-main {
-    width: 100%; height: 50px; background: #00f2fe; border: none; outline: none;
-    border-radius: 12px; cursor: pointer; font-size: 1.1rem; color: #0f172a;
-    font-weight: 700; transition: .3s; margin-top: 15px;
+    width: 100%; height: 45px; background: #00f2fe; border: none; border-radius: 8px;
+    font-weight: 700; cursor: pointer; transition: .3s; font-size: 1rem;
 }
-.btn-main:hover { background: #fff; box-shadow: 0 0 20px #00f2fe; transform: translateY(-2px); }
+.btn-main:hover { background: #fff; box-shadow: 0 0 15px #00f2fe; }
 
-.login-register { font-size: .9rem; color: #fff; text-align: center; margin: 25px 0 10px; }
+.login-register { text-align: center; margin-top: 20px; font-size: 0.85rem; color: #fff; }
 .login-register p a { color: #00f2fe; text-decoration: none; font-weight: 600; }
-.login-register p a:hover { text-decoration: underline; }
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 600px) {
+    .main-header { padding: 12px 4%; }
+    .logo { font-size: 1.2rem; }
     
+    /* Hide links on very small screens to save space, button stays right */
+    .navigation { display: none; } 
+    
+    .wrapper { width: 90%; height: 420px; margin-top: 70px; }
+    .wrapper.active { height: 490px; }
+    .form-box { padding: 30px 20px; }
+}
