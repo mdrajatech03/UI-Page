@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | RAJATECH Elite</title>
+    <title>Elite Dashboard | RAJATECH</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        .dash-body { background: #020617; color: #fff; min-height: 100vh; padding: 100px 20px 20px; }
+        .dash-body { background: #020617; color: #fff; min-height: 100vh; padding-top: 100px; }
         .profile-card {
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 242, 254, 0.2);
-            backdrop-filter: blur(15px); border-radius: 30px; width: 100%; max-width: 400px;
-            margin: 0 auto; padding: 40px; text-align: center; box-shadow: 0 0 30px rgba(0, 242, 254, 0.1);
+            backdrop-filter: blur(15px); border-radius: 30px; width: 90%; max-width: 400px;
+            margin: 0 auto; padding: 30px; text-align: center;
         }
         .avatar-zone { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
-        #userDP { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #00f2fe; }
+        #userDP { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #00f2fe; background: #1e293b; }
         #fileInput { display: none; }
         .upload-label {
             position: absolute; bottom: 0; right: 0; background: #00f2fe; color: #000;
@@ -25,82 +25,71 @@
             justify-content: center; align-items: center; cursor: pointer; font-weight: bold;
         }
 
-        .btn-action {
-            width: 100%; padding: 14px; border-radius: 15px; border: none;
-            font-weight: 700; cursor: pointer; margin-top: 15px; transition: 0.3s;
-        }
+        .btn-action { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-update { background: #10b981; color: #fff; display: none; } /* Hidden until change */
         .btn-view { background: linear-gradient(45deg, #00f2fe, #0072ff); color: #fff; }
-        .btn-logout { background: transparent; border: 2px solid #ff4757; color: #ff4757; margin-top: 10px; }
+        .btn-logout { background: transparent; border: 2px solid #ff4757; color: #ff4757; }
 
-        /* ID MODAL (Preview Page) */
+        /* ID MODAL */
         .id-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center;
-            flex-direction: column; overflow-y: auto; padding: 20px;
+            background: rgba(0, 0, 0, 0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column;
         }
         .id-modal.active { display: flex; }
 
-        /* CYBERPUNK ID DESIGN (Inside Modal) */
+        /* PROFESSIONAL CYBER ID */
         #idCardContent {
-            width: 350px; height: 550px; background: #050816; border-radius: 25px;
-            border: 2px solid #00f2fe; position: relative; padding: 30px; text-align: center;
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.3);
+            width: 340px; height: 520px; background: #050816; border-radius: 20px;
+            border: 2px solid #00f2fe; position: relative; padding: 25px; text-align: center;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.2);
         }
-        .id-logo { font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: 3px; margin-bottom: 20px; }
-        .id-logo span { color: #00f2fe; }
-        .id-photo-frame { width: 140px; height: 140px; margin: 0 auto 15px; border: 2px solid #00f2fe; border-radius: 15px; padding: 5px; }
-        #idPhoto { width: 100%; height: 100%; border-radius: 10px; object-fit: cover; }
-        .id-name { font-size: 1.6rem; color: #fff; font-weight: 700; }
-        .id-email { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; }
+        .id-logo { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 20px; border-bottom: 1px solid rgba(0,242,254,0.3); padding-bottom: 10px; }
+        .id-photo-frame { width: 130px; height: 130px; margin: 0 auto 15px; border: 2px solid #00f2fe; border-radius: 10px; overflow: hidden; }
+        #idPhoto { width: 100%; height: 100%; object-fit: cover; }
         
-        #idQRCode { background: white; padding: 5px; width: 80px; height: 80px; margin: 0 auto 15px; border-radius: 5px; }
+        #idQRCode { 
+            width: 90px; height: 90px; margin: 15px auto; padding: 8px; 
+            background: #fff; border-radius: 10px; border: 3px solid #00f2fe;
+        }
         #idQRCode img { width: 100% !important; height: 100% !important; }
 
-        .id-footer-line { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; padding-top: 15px; font-size: 0.6rem; color: #475569; }
-
-        .modal-btns { display: flex; gap: 10px; width: 350px; margin-top: 20px; }
-        .btn-dl { flex: 1; background: #00f2fe; color: #000; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
-        .btn-close { flex: 1; background: #ff4757; color: #fff; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
+        .modal-btns { display: flex; gap: 10px; width: 340px; margin-top: 20px; }
     </style>
 </head>
 <body class="dash-body">
 
-    <header class="main-header" style="position: fixed; top:0; width:100%; padding:20px 8%; display:flex; justify-content:space-between; align-items:center; background:rgba(2,6,23,0.9); z-index:1500;">
-        <h2 style="color:#fff">RAJA<span style="color:#00f2fe">TECH</span></h2>
-    </header>
-
     <div class="profile-card">
         <div class="avatar-zone">
-            <img id="userDP" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+            <img id="userDP" src="">
             <label for="fileInput" class="upload-label">✎</label>
             <input type="file" id="fileInput" accept="image/*">
         </div>
-        <div class="user-info">
-            <h2 id="userName">...</h2>
-            <p id="userEmail">...</p>
-        </div>
+        <h2 id="userName">Loading...</h2>
+        <p id="userEmail">...</p>
+        
+        <button id="saveBtn" class="btn-action btn-update">Save Profile Changes</button>
         <button class="btn-action btn-view" id="viewID">View Identity Card</button>
-        <button class="btn-action btn-logout" id="logoutBtn">Sign Out</button>
+        <button class="btn-action btn-logout" id="logoutBtn">Logout</button>
     </div>
 
     <div class="id-modal" id="idModal">
         <div id="idCardContent">
-            <div class="id-logo">RAJA<span>TECH</span></div>
+            <div class="id-logo">RAJA<span style="color:#00f2fe">TECH</span> ELITE</div>
             <div class="id-photo-frame">
-                <img id="idPhoto" src="">
+                <img id="idPhoto" src="" crossorigin="anonymous">
             </div>
-            <h2 class="id-name" id="idCardName">...</h2>
-            <p class="id-email" id="idCardEmail">...</p>
+            <h2 id="idCardName" style="color:#fff; margin:10px 0 5px;">...</h2>
+            <p id="idCardEmail" style="color:#94a3b8; font-size:0.8rem;">...</p>
             
-            <div id="idQRCode"></div> <div class="id-footer-line">
-                <p>ELITE DIGITAL ACCESS CARD</p>
-                <p id="idUIDText" style="margin-top:5px;"></p>
-            </div>
+            <div id="idQRCode"></div>
+            
+            <p style="font-size:0.6rem; color:#00f2fe; margin-top:10px; letter-spacing:2px;">OFFICIAL ACCESS KEY</p>
+            <p id="idUIDText" style="font-size:0.5rem; color:#475569;"></p>
         </div>
 
         <div class="modal-btns">
-            <button class="btn-dl" id="finalDownload">Download PNG</button>
-            <button class="btn-close" id="closeID">Back</button>
+            <button class="btn-action" style="background:#00f2fe; color:#000;" id="finalDownload">Download ID</button>
+            <button class="btn-action" style="background:#ff4757; color:#fff;" id="closeID">Close</button>
         </div>
     </div>
 
@@ -122,7 +111,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let qrGenerated = false;
+        let currentUserData = null;
+        let pendingImage = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -130,63 +120,72 @@
                 const snap = await getDoc(userRef);
                 
                 if (snap.exists()) {
-                    const data = snap.data();
-                    const profileImg = data.profilePic || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-                    
-                    // Dashboard Update
-                    document.getElementById('userName').innerText = data.username;
-                    document.getElementById('userEmail').innerText = data.email;
-                    document.getElementById('userDP').src = profileImg;
-
-                    // ID Card Data Update
-                    document.getElementById('idCardName').innerText = data.username;
-                    document.getElementById('idCardEmail').innerText = data.email;
-                    document.getElementById('idPhoto').src = profileImg;
-                    document.getElementById('idUIDText').innerText = "UID: " + user.uid;
-
-                    // QR Code Generation (Once)
-                    if(!qrGenerated) {
-                        new QRCode(document.getElementById("idQRCode"), {
-                            text: user.uid,
-                            width: 80, height: 80,
-                            colorDark : "#000000", colorLight : "#ffffff"
-                        });
-                        qrGenerated = true;
-                    }
+                    currentUserData = snap.data();
+                    updateUI(currentUserData, user.uid);
                 }
 
-                // Photo Change
+                // PHOTO CHANGE LOGIC
                 document.getElementById('fileInput').onchange = (e) => {
                     const file = e.target.files[0];
                     const reader = new FileReader();
-                    reader.onloadend = async () => {
-                        const base64 = reader.result;
-                        document.getElementById('userDP').src = base64;
-                        document.getElementById('idPhoto').src = base64;
-                        await updateDoc(userRef, { profilePic: base64 });
-                        Swal.fire('Success', 'Profile Pic Updated!', 'success');
+                    reader.onloadend = () => {
+                        pendingImage = reader.result;
+                        document.getElementById('userDP').src = pendingImage;
+                        document.getElementById('saveBtn').style.display = 'block'; // Show Update button
                     };
                     if (file) reader.readAsDataURL(file);
+                };
+
+                // SAVE BUTTON LOGIC
+                document.getElementById('saveBtn').onclick = async () => {
+                    try {
+                        Swal.fire({ title: 'Saving...', didOpen: () => Swal.showLoading() });
+                        await updateDoc(userRef, { profilePic: pendingImage });
+                        document.getElementById('saveBtn').style.display = 'none';
+                        Swal.fire('Success', 'Profile Updated!', 'success');
+                        location.reload(); // Refresh to lock changes
+                    } catch (e) { Swal.fire('Error', 'Failed to save', 'error'); }
                 };
 
             } else { window.location.href = "index.html"; }
         });
 
-        // Modal Controls
+        function updateUI(data, uid) {
+            const img = data.profilePic || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+            document.getElementById('userName').innerText = data.username;
+            document.getElementById('userEmail').innerText = data.email;
+            document.getElementById('userDP').src = img;
+
+            // ID Card Data
+            document.getElementById('idCardName').innerText = data.username;
+            document.getElementById('idCardEmail').innerText = data.email;
+            document.getElementById('idPhoto').src = img;
+            document.getElementById('idUIDText').innerText = "UID: " + uid;
+
+            // QR Code
+            document.getElementById("idQRCode").innerHTML = ""; // Clear old
+            new QRCode(document.getElementById("idQRCode"), {
+                text: uid, width: 80, height: 80, colorDark: "#000", colorLight: "#fff"
+            });
+        }
+
+        // Modal Logic
         document.getElementById('viewID').onclick = () => document.getElementById('idModal').classList.add('active');
         document.getElementById('closeID').onclick = () => document.getElementById('idModal').classList.remove('active');
 
-        // Download Final Card
+        // Download Logic (FIXED FOR PHOTOS)
         document.getElementById('finalDownload').onclick = () => {
             const card = document.getElementById('idCardContent');
-            Swal.fire({ title: 'Downloading ID...', background:'#050816', color:'#fff', didOpen: () => Swal.showLoading() });
-
-            html2canvas(card, { scale: 3, useCORS: true, backgroundColor: "#050816" }).then(canvas => {
+            html2canvas(card, { 
+                scale: 3, 
+                useCORS: true, 
+                allowTaint: true,
+                backgroundColor: "#050816" 
+            }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'RAJATECH_ID_CARD.png';
+                link.download = 'RAJATECH_ID.png';
                 link.href = canvas.toDataURL("image/png");
                 link.click();
-                Swal.close();
             });
         };
 
