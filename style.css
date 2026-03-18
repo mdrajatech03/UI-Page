@@ -1,75 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #050a0f; overflow-x: hidden; }
+
+body {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; background: #050816; overflow: hidden; color: #fff;
+}
+
+/* Background Animation */
+.background-animate {
+    position: absolute; width: 100%; height: 100%;
+    background: linear-gradient(45deg, #050816, #1a1a2e);
+    z-index: -1;
+}
 
 header {
-    position: fixed; top: 0; width: 100%; padding: 20px 10%;
-    display: flex; justify-content: space-between; align-items: center;
-    z-index: 100; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
+    position: fixed; top: 0; left: 0; width: 100%; padding: 20px 100px;
+    display: flex; justify-content: space-between; align-items: center; z-index: 99;
 }
-.logo { font-size: 1.8em; color: #fff; font-weight: 700; }
-.logo span { color: #00f2fe; }
-.navigation a { color: #fff; text-decoration: none; font-weight: 500; margin-left: 25px; }
-.btnLogin-popup { width: 110px; height: 45px; background: transparent; border: 2px solid #00f2fe; border-radius: 30px; color: #fff; cursor: pointer; margin-left: 25px; }
 
-#btnLogout { width: 110px; height: 45px; background: transparent; border: 2px solid #00f2fe; border-radius: 30px; color: #fff; cursor: pointer; margin-left: 25px; }
+.logo { font-size: 2em; color: #00f2fe; user-select: none; }
 
-
-/* Wrapper - Centered and Responsive */
 .wrapper {
     position: relative; width: 400px; height: 440px;
-    background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px; backdrop-filter: blur(20px);
-    display: flex; align-items: center; overflow: hidden;
-    transform: scale(0); transition: transform .5s, height .3s;
+    display: flex; justify-content: center; align-items: center;
+    transition: transform .5s ease, height .2s ease; overflow: hidden; transform: scale(0);
 }
+
 .wrapper.active-popup { transform: scale(1); }
-.wrapper.active { height: 550px; }
+.wrapper.active { height: 520px; }
 
-.form-box { width: 100%; padding: 40px; transition: transform .5s ease; }
+.form-box { width: 100%; padding: 40px; }
+.form-box.register { position: absolute; transform: translateX(400px); transition: .18s ease; }
+.wrapper.active .form-box.login { transform: translateX(-400px); transition: none; }
+.wrapper.active .form-box.register { transform: translateX(0); transition: .18s ease; }
 
-/* Desktop Sliding */
-.form-box.login { transform: translateX(0); }
-.wrapper.active .form-box.login { transform: translateX(-400px); }
+.input-box { position: relative; width: 100%; height: 50px; border-bottom: 2px solid #fff; margin: 30px 0; }
+.input-box input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: #fff; padding-right: 28px; }
+.input-box label { position: absolute; top: 50%; left: 0; transform: translateY(-50%); transition: .5s; pointer-events: none; }
+.input-box input:focus~label, .input-box input:valid~label { top: -5px; }
 
-.form-box.register { position: absolute; transform: translateX(400px); }
-.wrapper.active .form-box.register { transform: translateX(0); }
+.btn { width: 100%; height: 45px; background: #00f2fe; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; font-weight: 600; color: #050816; transition: .3s; }
+.btn:hover { background: #fff; box-shadow: 0 0 15px #00f2fe; }
 
-/* Inputs */
-.input-group { margin-bottom: 20px; }
-.input-group label { color: #fff; font-size: 0.9em; display: block; margin-bottom: 5px; }
-.field { position: relative; }
-.field input { width: 100%; height: 45px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0 40px 0 15px; color: #fff; outline: none; }
-.field i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #fff; cursor: pointer; }
-
-.btn { width: 100%; height: 45px; background: #00f2fe; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 600; margin-top: 10px; }
-.icon-close { position: absolute; top: 0; right: 0; width: 45px; height: 45px; background: #00f2fe; display: flex; justify-content: center; align-items: center; border-bottom-left-radius: 20px; cursor: pointer; z-index: 10; }
-.login-register { text-align: center; color: #fff; margin-top: 20px; font-size: 0.9em; }
-.login-register a { color: #00f2fe; text-decoration: none; font-weight: 600; }
-
-/* ================== MOBILE MODE FIX ================== */
-@media (max-width: 768px) {
-    header { flex-direction: column; padding: 15px 2%; }
-    .navigation { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-    .navigation a { margin-left: 0; padding-top: 10px; font-size: .9em; }
-    
-    .btnLogin-popup { width: 110px; height: 45px; background: transparent; border: 2px solid #00f2fe; border-radius: 30px; color: #fff; cursor: pointer; margin-left: 25px; }
-
-    .wrapper { width: 90%; margin-top: 120px; height: auto; min-height: 450px; }
-    .wrapper.active { height: auto; }
-
-    /* CRITICAL: Disable sliding on mobile to stop content cutting off */
-    .form-box { position: relative; transform: none !important; padding: 25px; }
-    
-    /* Show Login, Hide Register by default */
-    .form-box.register { display: none; }
-    
-    /* When active, Hide Login, Show Register */
-    .wrapper.active .form-box.login { display: none; }
-    .wrapper.active .form-box.register { display: block; transform: none; }
+/* Dashboard Styles */
+.profile-card {
+    background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; width: 400px;
+    animation: pop .5s ease-out;
 }
+.avatar-container { width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%; border: 3px solid #00f2fe; overflow: hidden; }
+#userDP { width: 100%; height: 100%; object-fit: cover; }
+@keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-
-
-
-
-
+.btn-outline { padding: 10px 25px; border: 2px solid #00f2fe; background: transparent; color: #00f2fe; border-radius: 50px; cursor: pointer; }
