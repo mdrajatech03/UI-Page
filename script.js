@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCMwFJfbkdFjxWzNhMccXs9FbhqntSKdRM",
@@ -15,19 +15,22 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const wrapper = document.querySelector('.wrapper');
-const btnPopup = document.querySelector('.btnLogin-popup');
-const iconClose = document.querySelector('.icon-close');
-const registerLink = document.querySelector('.register-link');
-const loginLink = document.querySelector('.login-link');
+// Selectors
+const wrapper = document.getElementById('mainWrapper');
+const btnLoginPopup = document.getElementById('openLogin');
+const btnClose = document.getElementById('closeBtn');
+const toRegister = document.getElementById('toRegister');
+const toLogin = document.getElementById('toLogin');
 
-// UI Actions
-btnPopup.onclick = () => { wrapper.classList.add('active-popup'); wrapper.classList.remove('active'); };
-iconClose.onclick = () => wrapper.classList.remove('active-popup');
-registerLink.onclick = () => wrapper.classList.add('active');
-loginLink.onclick = () => wrapper.classList.remove('active');
+// UI Controls
+if(btnLoginPopup) btnLoginPopup.onclick = () => { wrapper.classList.add('active-popup'); wrapper.classList.remove('active'); };
+if(btnClose) btnClose.onclick = () => wrapper.classList.remove('active-popup');
 
-const showMsg = (icon, title) => Swal.fire({ icon, title, background: '#1e293b', color: '#fff', timer: 2000, showConfirmButton: false });
+// Transition Fix
+if(toRegister) toRegister.onclick = () => wrapper.classList.add('active');
+if(toLogin) toLogin.onclick = () => wrapper.classList.remove('active');
+
+const showAlert = (icon, title) => Swal.fire({ icon, title, background: '#1e293b', color: '#fff', timer: 2000, showConfirmButton: false });
 
 // Register Logic
 document.getElementById('registerForm').onsubmit = async (e) => {
@@ -39,35 +42,26 @@ document.getElementById('registerForm').onsubmit = async (e) => {
     try {
         const res = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(doc(db, "users", res.user.uid), { username: name, email, uid: res.user.uid });
-        showMsg('success', 'Account Created! Opening Login...');
-        // Wait then switch
-        setTimeout(() => { wrapper.classList.remove('active'); }, 1500);
-    } catch (err) { showMsg('error', 'Failed! Check Connection.'); }
+        
+        showAlert('success', 'Registration Successful!');
+        
+        // FIX: Turant login form par switch karega
+        setTimeout(() => { 
+            wrapper.classList.remove('active'); 
+            document.getElementById('registerForm').reset();
+        }, 1500);
+    } catch (err) { showAlert('error', 'Registration Failed!'); }
 };
 
 // Login Logic
 document.getElementById('loginForm').onsubmit = async (e) => {
     e.preventDefault();
+    const email = document.getElementById('logEmail').value;
+    const pass = document.getElementById('logPass').value;
+
     try {
-        await signInWithEmailAndPassword(auth, document.getElementById('logEmail').value, document.getElementById('logPass').value);
-        showMsg('success', 'Welcome Back!');
-        setTimeout(() => { window.location.href = "portfolio.html"; }, 1000);
-    } catch (err) { showMsg('error', 'Invalid Credentials!'); }
+        await signInWithEmailAndPassword(auth, email, pass);
+        showAlert('success', 'Welcome Back! Redirecting...');
+        setTimeout(() => { window.location.href = "portfolio.html"; }, 1500);
+    } catch (err) { showAlert('error', 'Invalid Credentials!'); }
 };
-
-// Auto-Sync Profile Data (for portfolio.html)
-onAuthStateChanged(auth, async (user) => {
-    if (user && window.location.pathname.includes("portfolio.html")) {
-        const docSnap = await getDoc(doc(db, "users", user.uid));
-        if (docSnap.exists()) {
-            document.getElementById('userName').innerText = docSnap.data().username;
-            document.getElementById('userEmail').innerText = docSnap.data().email;
-        }
-    } else if (!user && window.location.pathname.includes("portfolio.html")) {
-        window.location.href = "index.html";
-    }
-});
-
-// Logout
-const logOutBtn = document.getElementById('btnLogout');
-if(logOutBtn) logOutBtn.onclick = () => signOut(auth).then(() => window.location.href = "index.html");
