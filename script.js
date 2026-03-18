@@ -16,20 +16,20 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const wrapper = document.querySelector('.wrapper');
-const loginLink = document.querySelector('.login-link');
-const registerLink = document.querySelector('.register-link');
 const btnPopup = document.querySelector('.btnLogin-popup');
 const iconClose = document.querySelector('.icon-close');
+const registerLink = document.querySelector('.register-link');
+const loginLink = document.querySelector('.login-link');
 
-// Open/Close Popup
+// Popup Open/Close
 btnPopup.onclick = () => { wrapper.classList.add('active-popup'); wrapper.classList.remove('active'); };
 iconClose.onclick = () => wrapper.classList.remove('active-popup');
 
-// Slide Switch Logic
-registerLink.onclick = (e) => { e.preventDefault(); wrapper.classList.add('active'); };
-loginLink.onclick = (e) => { e.preventDefault(); wrapper.classList.remove('active'); };
+// Slide Toggle
+registerLink.onclick = () => wrapper.classList.add('active');
+loginLink.onclick = () => wrapper.classList.remove('active');
 
-// Register Submit
+// Firebase Registration Fix
 document.getElementById('registerForm').onsubmit = async (e) => {
     e.preventDefault();
     const name = document.getElementById('regName').value;
@@ -38,17 +38,20 @@ document.getElementById('registerForm').onsubmit = async (e) => {
 
     try {
         const res = await createUserWithEmailAndPassword(auth, email, pass);
-        await setDoc(doc(db, "users", res.user.uid), { username: name, email: email, uid: res.user.uid });
+        await setDoc(doc(db, "users", res.user.uid), { username: name, email: email });
         
-        Swal.fire({ icon: 'success', title: 'Registration Successful!', background: '#1e293b', color: '#fff', timer: 1500, showConfirmButton: false });
-        
-        // AUTO SWITCH TO LOGIN
+        Swal.fire({ icon: 'success', title: 'Done!', text: 'Account Created. Switching to Login...', timer: 2000, showConfirmButton: false });
+
+        // YE RAHA FIX: Pehle form reset, phir 1.5s baad slide back
         document.getElementById('registerForm').reset();
-        setTimeout(() => { wrapper.classList.remove('active'); }, 1500);
-    } catch (err) { Swal.fire({ icon: 'error', title: 'Error', text: 'Registration failed or user exists!', background: '#1e293b', color: '#fff' }); }
+        setTimeout(() => {
+            wrapper.classList.remove('active');
+        }, 1500);
+
+    } catch (err) { Swal.fire('Error', 'Failed!', 'error'); }
 };
 
-// Login Submit
+// Login Logic
 document.getElementById('loginForm').onsubmit = async (e) => {
     e.preventDefault();
     const email = document.getElementById('logEmail').value;
@@ -56,7 +59,7 @@ document.getElementById('loginForm').onsubmit = async (e) => {
 
     try {
         await signInWithEmailAndPassword(auth, email, pass);
-        Swal.fire({ icon: 'success', title: 'Welcome Back!', background: '#1e293b', color: '#fff', timer: 1500, showConfirmButton: false });
+        Swal.fire('Success', 'Logging in...', 'success');
         setTimeout(() => { window.location.href = "portfolio.html"; }, 1500);
-    } catch (err) { Swal.fire({ icon: 'error', title: 'Oops...', text: 'Wrong Email or Password!', background: '#1e293b', color: '#fff' }); }
+    } catch (err) { Swal.fire('Error', 'Wrong Credentials!', 'error'); }
 };
